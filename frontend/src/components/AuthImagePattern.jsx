@@ -1,19 +1,26 @@
 const AuthImagePattern = ({ title, subtitle }) => {
   return (
-    <div className="hidden lg:flex items-center justify-center bg-base-200 p-12">
-      <div className="max-w-md text-center">
-        <div className="grid grid-cols-3 gap-3 mb-8">
+    <div className="hidden lg:flex items-center justify-center bg-base-200/40 p-16 border-l border-base-200/30">
+      <div className="max-w-xs text-center space-y-8">
+        {/* Geometric grid decoration */}
+        <div className="grid grid-cols-3 gap-2.5 mx-auto w-fit">
           {[...Array(9)].map((_, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-2xl bg-primary/10 ${
-                i % 2 === 0 ? "animate-pulse" : ""
-              }`}
+              className={`size-12 rounded-2xl transition-all duration-300 ${i === 4
+                  ? "bg-base-content/10 scale-110"
+                  : i % 2 === 0
+                    ? "bg-base-content/[0.06]"
+                    : "bg-base-content/[0.03]"
+                }`}
             />
           ))}
         </div>
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <p className="text-base-content/60">{subtitle}</p>
+
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold text-base-content tracking-tight">{title}</h2>
+          <p className="text-sm text-base-content/40 leading-relaxed">{subtitle}</p>
+        </div>
       </div>
     </div>
   );

@@ -11,9 +11,7 @@ const ProfilePage = () => {
     if (!file) return;
 
     const reader = new FileReader();
-
     reader.readAsDataURL(file);
-
     reader.onload = async () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
@@ -22,83 +20,101 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="h-screen pt-20">
-      <div className="max-w-2xl mx-auto p-4 py-8">
-        <div className="bg-base-300 rounded-xl p-6 space-y-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold ">Profile</h1>
-            <p className="mt-2">Your profile information</p>
-          </div>
+    <div className="min-h-screen pt-20 bg-base-100">
+      <div className="max-w-xl mx-auto px-6 py-12 space-y-10">
 
-          {/* avatar upload section */}
+        {/* Page Header */}
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold tracking-tight text-base-content">Profile</h1>
+          <p className="text-sm text-base-content/40">Manage your account information.</p>
+        </div>
 
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <img
-                src={selectedImg || authUser.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="size-32 rounded-full object-cover border-4 "
+        {/* Avatar Section */}
+        <div className="flex items-center gap-6">
+          <div className="relative group flex-shrink-0">
+            <img
+              src={selectedImg || authUser.profilePic || "/avatar.png"}
+              alt="Profile"
+              className="size-20 rounded-2xl object-cover border border-base-200/50 shadow-sm transition-opacity group-hover:opacity-90"
+            />
+            <label
+              htmlFor="avatar-upload"
+              className={`
+                absolute -bottom-2 -right-2
+                bg-base-100 border border-base-200/60 text-base-content/60 hover:text-base-content shadow-sm
+                p-1.5 rounded-xl cursor-pointer
+                transition-all duration-200
+                ${isUpdatingProfile ? "animate-pulse pointer-events-none opacity-40" : "hover:bg-base-200/50"}
+              `}
+            >
+              <Camera className="w-4 h-4" />
+              <input
+                type="file"
+                id="avatar-upload"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={isUpdatingProfile}
               />
-              <label
-                htmlFor="avatar-upload"
-                className={`
-                  absolute bottom-0 right-0 
-                  bg-base-content hover:scale-105
-                  p-2 rounded-full cursor-pointer 
-                  transition-all duration-200
-                  ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}
-                `}
-              >
-                <Camera className="w-5 h-5 text-base-200" />
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={isUpdatingProfile}
-                />
-              </label>
-            </div>
-            <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+            </label>
+          </div>
+          <div>
+            <p className="font-semibold text-base-content text-base">{authUser?.fullName}</p>
+            <p className="text-sm text-base-content/40 mt-0.5">{authUser?.email}</p>
+            <p className="text-xs text-base-content/30 mt-2">
+              {isUpdatingProfile ? "Uploading photo..." : "Click the camera to change your photo"}
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-base-200/50" />
+
+        {/* Info Fields */}
+        <div className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5" /> Full Name
+            </label>
+            <p className="px-4 py-3 bg-base-200/25 rounded-xl border border-base-200/40 text-sm font-medium text-base-content">
+              {authUser?.fullName}
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Full Name
-              </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.fullName}</p>
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                Email Address
-              </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
-            </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5" /> Email Address
+            </label>
+            <p className="px-4 py-3 bg-base-200/25 rounded-xl border border-base-200/40 text-sm font-medium text-base-content">
+              {authUser?.email}
+            </p>
           </div>
+        </div>
 
-          <div className="mt-6 bg-base-300 rounded-xl p-6">
-            <h2 className="text-lg font-medium  mb-4">Account Information</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between py-2 border-b border-zinc-700">
-                <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <span>Account Status</span>
-                <span className="text-green-500">Active</span>
-              </div>
+        {/* Divider */}
+        <div className="h-px bg-base-200/50" />
+
+        {/* Account Details */}
+        <div className="space-y-4">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-base-content/40">Account</h2>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-base-content/50">Member since</span>
+              <span className="font-medium text-base-content">{authUser.createdAt?.split("T")[0]}</span>
+            </div>
+            <div className="h-px bg-base-200/40" />
+            <div className="flex items-center justify-between">
+              <span className="text-base-content/50">Status</span>
+              <span className="text-emerald-500 font-semibold text-xs bg-emerald-500/10 px-2.5 py-1 rounded-full">
+                Active
+              </span>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
 };
+
 export default ProfilePage;

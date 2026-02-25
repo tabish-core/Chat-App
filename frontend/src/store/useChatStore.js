@@ -39,7 +39,8 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+           toast.error(error.response?.data?.message || error.message || "Failed to send message");
+
     }
   },
 

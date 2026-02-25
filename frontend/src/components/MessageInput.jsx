@@ -11,10 +11,19 @@ const MessageInput = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
+
+
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size must be less than 5MB");
+      return;
+    }
+
+
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -48,33 +57,42 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 sm:p-6 w-full mt-auto">
       {imagePreview && (
-        <div className="mb-3 flex items-center gap-2">
-          <div className="relative">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="relative group">
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+              className="w-16 h-16 object-cover rounded-xl shadow-sm border border-base-200/50"
             />
             <button
               onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
-              flex items-center justify-center"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-base-300 text-base-content/70
+              flex items-center justify-center shadow-none hover:bg-base-200 transition-colors opacity-0 group-hover:opacity-100"
               type="button"
             >
-              <X className="size-3" />
+              <X className="w-3 h-3" />
             </button>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
+      <form onSubmit={handleSendMessage} className="flex items-center gap-4 w-full bg-base-100 border border-base-200/50 rounded-full px-4 py-2 hover:border-base-200/80 focus-within:border-base-300 transition-colors">
+        <div className="flex-1 flex gap-3 items-center">
+          <button
+            type="button"
+            className={`flex items-center justify-center min-w-8 h-8 rounded-full transition-colors
+                     ${imagePreview ? "text-base-content bg-base-200/70" : "text-base-content/40 hover:text-base-content/80 hover:bg-base-200/50"}`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Image size={18} strokeWidth={2} />
+          </button>
+
           <input
             type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="Type a message..."
+            className="w-full bg-transparent border-none text-sm font-normal focus:outline-none focus:ring-0 placeholder:text-base-content/30 text-base-content"
+            placeholder="Write a message..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -85,23 +103,20 @@ const MessageInput = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-
-          <button
-            type="button"
-            className={`hidden sm:flex btn btn-circle
-                     ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Image size={20} />
-          </button>
         </div>
-        <button
-          type="submit"
-          className="btn btn-sm btn-circle"
-          disabled={!text.trim() && !imagePreview}
-        >
-          <Send size={22} />
-        </button>
+
+        {(text.trim() || imagePreview) ? (
+          <button
+            type="submit"
+            className="flex items-center justify-center min-w-8 h-8 rounded-full bg-base-content text-base-100 hover:opacity-80 transition-all scale-100 active:scale-95"
+          >
+            <Send size={16} className="ml-0.5" strokeWidth={2.5} />
+          </button>
+        ) : (
+          <div className="min-w-8 h-8 rounded-full flex items-center justify-center text-base-content/20">
+            <Send size={16} className="ml-0.5" strokeWidth={2} />
+          </div>
+        )}
       </form>
     </div>
   );

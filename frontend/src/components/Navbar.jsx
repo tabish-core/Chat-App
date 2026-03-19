@@ -12,7 +12,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="hover:opacity-70 transition-opacity">
-            <span className="text-sm font-semibold tracking-wide text-base-content">TabTalk</span>
+            <span className="text-lg font-semibold tracking-wide text-base-content">TabTalk</span>
           </Link>
 
           {/* Nav Actions */}
